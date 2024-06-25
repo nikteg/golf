@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://buu71w5tqbum8"]
+
+[ext_resource type="Script" path="res://ball.gd" id="1_4mcyl"]
+[ext_resource type="Script" path="res://gimbal.gd" id="1_qdiew"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_86hey"]
+data = PackedVector3Array(-5, 0.05, 5, 5, 0.05, 5, -5, -0.05, 5, 5, 0.05, 5, 5, -0.05, 5, -5, -0.05, 5, 5, 0.05, -5, -5, 0.05, -5, 5, -0.05, -5, -5, 0.05, -5, -5, -0.05, -5, 5, -0.05, -5, 5, 0.05, 5, 5, 0.05, -5, 5, -0.05, 5, 5, 0.05, -5, 5, -0.05, -5, 5, -0.05, 5, -5, 0.05, -5, -5, 0.05, 5, -5, -0.05, -5, -5, 0.05, 5, -5, -0.05, 5, -5, -0.05, -5, 5, 0.05, 5, -5, 0.05, 5, 5, 0.05, -5, -5, 0.05, 5, -5, 0.05, -5, 5, 0.05, -5, -5, -0.05, 5, 5, -0.05, 5, -5, -0.05, -5, 5, -0.05, 5, 5, -0.05, -5, -5, -0.05, -5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_whtfn"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1k3rn"]
+radius = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_0lv8w"]
+radius = 0.2
+height = 0.4
+
+[node name="golfgame" type="Node3D"]
+
+[node name="floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.134128, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+shape = SubResource("ConcavePolygonShape3D_86hey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+mesh = SubResource("BoxMesh_whtfn")
+skeleton = NodePath("")
+
+[node name="ball" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.718604, 0)
+script = ExtResource("1_4mcyl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ball"]
+shape = SubResource("SphereShape3D_1k3rn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ball"]
+mesh = SubResource("SphereMesh_0lv8w")
+skeleton = NodePath(".")
+
+[node name="gimbal" type="Node3D" parent="ball"]
+script = ExtResource("1_qdiew")
+
+[node name="camera" type="Camera3D" parent="ball/gimbal"]
+unique_name_in_owner = true
+transform = Transform3D(0.999966, 0.00668694, -0.00491642, -0.00197422, 0.766989, 0.641657, 0.00806156, -0.641625, 0.766976, 2.08165e-12, 3.855, 2.209)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.427768, 0.486949, -0.761509, 1.63363e-17, 0.842481, 0.538727, 0.903889, -0.23045, 0.360386, 0, 4.52059, 0)
+shadow_enabled = true
+
+[connection signal="input_event" from="ball" to="ball" method="_on_input_event"]
